@@ -1,5 +1,11 @@
-# quarkus
+# Pure Quarkus
 
-Follow this 
+hello world - HTTP Get resource
 
-https://dzone.com/articles/bind-a-cloud-event-to-knative
+# Quarkus and Camel
+
+Camel Hello World - CDI - Simple integration that print logs in the console using a timer
+
+# Sources
+
+https://camel.apache.org/camel-quarkus/latest/user-guide/examples.html
