@@ -111,6 +111,46 @@ $ ./target/*-runner
 ...
 ----
 
+
+== Jaeger views
+
+Below examples show a custom Tag (myCorrelationId) injected by camel code.
+
+=== Get google resource
+
+Search by id
+
+image::./img/getgoogle_0.png[./img/getgoogle_0.png] 
+
+
+Request trace and spans view
+
+image::./img/getgoogle_1.png[./img/getgoogle_1.png] 
+
+
+Span's detail
+
+image::./img/getgoogle_2_ok.png[./img/getgoogle_2_ok.png] 
+
+
+In case of error, you can see it in the span detail
+
+
+image::./img/getgoogle_2_error.png[./img/getgoogle_2_error.png] 
+
+
+=== Greetings resource
+
+Another equest trace and spans view - In this case the resource use three camel routes internally
+
+image::./img/greetings_1.png[./img/greetings_1.png] 
+
+
+Span's detail
+
+image::./img/greetings_2.png[./img/greetings_2.png] 
+
+
 == Feedback
 
 Please report bugs and propose improvements via https://github.com/apache/camel-quarkus/issues[GitHub issues of Camel Quarkus] project.
