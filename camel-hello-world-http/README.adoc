@@ -1,7 +1,12 @@
-= Observability: A Camel Quarkus example
+= Observability: HTTP Hello World example
 :cq-example-description: An example that demonstrates how to add support for metrics, health checks and distributed tracing
 
-{cq-description}
+This example expose two HTTP resources:
+* greetings (post and get)
+* getgoogle (get) - return www.google.com home page
+
+Only the REST routes introduces a custom tag (myCorrelationId) in trace, the value comes from x-correlation-id HTTP header.
+
 
 TIP: Check the https://camel.apache.org/camel-quarkus/latest/first-steps.html[Camel Quarkus User guide] for prerequisites
 and other general information.
@@ -56,7 +61,7 @@ $ curl -s localhost:8080/q/health/ready
 The JSON output will contain a checks for verifying whether the `CamelContext` and each individual route is in the 'Started' state.
 
 This example project contains a custom liveness check class `CustomLivenessCheck` and custom readiness check class `CustomReadinessCheck` which leverage the Camel health API.
-You'll see these listed in the health JSON as 'custom-liveness-check' and 'custom-readiness-check'. On every 5th invocation of these checks, the health status of `custom-liveness-check` will be reported as DOWN.
+You'll see these listed in the health JSON as 'custom-liveness-check' and 'custom-readiness-check'. 
 
 You can also directly leverage MicroProfile Metrics APIs to create checks. Class `CamelUptimeHealthCheck` demonstrates how to register a readiness check.
 
@@ -72,10 +77,10 @@ $ docker run -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 -p 5775:5775/udp -p 6831:6831/ud
     -p 16686:16686 -p 14268:14268 -p 9411:9411 jaegertracing/all-in-one:latest
 ----
 
-With the server running, browse to http://localhost:16686. Then choose 'greetings-service' from the 'Service' drop down and click the 'Find Traces' button.
+With the server running, browse to http://localhost:16686. Then choose 'quarkus.jaeger.service-name (in application.properties)' from the 'Service' drop down and click the 'Find Traces' button.
 
-The `netty-http` consumer route introduces a random delay to simulate latency, hence the overall time of each trace should be different. When viewing a trace, you should see
-a hierarchy of 3 spans showing the progression of the message exchange through each endpoint.
+The consumer route introduces a random delay to simulate latency, hence the overall time of each trace should be different. When viewing a trace, you should see
+a hierarchy of spans showing the progression of the message exchange through each endpoint.
 
 
 === Package and run the application
@@ -120,35 +125,35 @@ Below examples show a custom Tag (myCorrelationId) injected by camel code.
 
 Search by id
 
-image::./img/getgoogle_0.png[./img/getgoogle_0.png] 
+image::./img/getgoogle_0.png[width=50%,height=50%] 
 
 
 Request trace and spans view
 
-image::./img/getgoogle_1.png[./img/getgoogle_1.png] 
+image::./img/getgoogle_1.png[width=50%,height=50%] 
 
 
 Span's detail
 
-image::./img/getgoogle_2_ok.png[./img/getgoogle_2_ok.png] 
+image::./img/getgoogle_2_ok.png[width=50%,height=50%] 
 
 
 In case of error, you can see it in the span detail
 
 
-image::./img/getgoogle_2_error.png[./img/getgoogle_2_error.png] 
+image::./img/getgoogle_2_error.png[width=50%,height=50%] 
 
 
 === Greetings resource
 
 Another equest trace and spans view - In this case the resource use three camel routes internally
 
-image::./img/greetings_1.png[./img/greetings_1.png] 
+image::./img/greetings_1.png[width=50%,height=50%] 
 
 
 Span's detail
 
-image::./img/greetings_2.png[./img/greetings_2.png] 
+image::./img/greetings_2.png[width=50%,height=50%] 
 
 
 == Feedback

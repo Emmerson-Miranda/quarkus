@@ -27,6 +27,9 @@ import org.eclipse.microprofile.health.Readiness;
 
 /**
  * A simple CamelContext uptime readiness check which implements the MicroProfile Health API.
+ * 
+ * This example is based on https://camel.apache.org/camel-quarkus/latest/user-guide/examples.html
+ * 
  */
 @Readiness
 @ApplicationScoped

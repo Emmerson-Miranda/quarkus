@@ -23,6 +23,9 @@ import org.apache.camel.impl.health.AbstractHealthCheck;
 
 /**
  * A simple custom liveness check which utilizes the Camel Health API.
+ * 
+ * This example is based on https://camel.apache.org/camel-quarkus/latest/user-guide/examples.html
+ * 
  */
 public class CustomReadinessCheck extends AbstractHealthCheck {
 

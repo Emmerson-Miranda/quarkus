@@ -17,7 +17,6 @@
 package edu.emmerson.camel.quarkus.helloworld.health.camel;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.camel.health.HealthCheckResultBuilder;
 import org.apache.camel.impl.health.AbstractHealthCheck;
@@ -26,10 +25,13 @@ import org.apache.camel.impl.health.AbstractHealthCheck;
  * A simple custom liveness check which utilizes the Camel Health API.
  *
  * The check status is recorded as DOWN on every 5th invocation.
+ * 
+ * This example is based on https://camel.apache.org/camel-quarkus/latest/user-guide/examples.html
+ * 
  */
 public class CustomLivenessCheck extends AbstractHealthCheck {
 
-    AtomicInteger hitCount = new AtomicInteger();
+    // AtomicInteger hitCount = new AtomicInteger();
 
     public CustomLivenessCheck() {
         super("custom-liveness-check");
@@ -38,14 +40,14 @@ public class CustomLivenessCheck extends AbstractHealthCheck {
 
     @Override
     protected void doCall(HealthCheckResultBuilder builder, Map<String, Object> options) {
-        int hits = hitCount.incrementAndGet();
+        //int hits = hitCount.incrementAndGet();
 
         // Flag the check as DOWN on every 5th invocation, else it is UP
-        if (hits % 5 == 0) {
-            builder.down();
-        } else {
-            builder.up();
-        }
+        //if (hits % 5 == 0) {
+        //builder.down();
+        //} else {
+        builder.up();
+        //}
     }
 
     @Override
