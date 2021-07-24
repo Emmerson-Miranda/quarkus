@@ -4,7 +4,11 @@ hello world - HTTP Get resource
 
 # Quarkus and Camel
 
-Camel Hello World - CDI - Simple integration that print logs in the console using a timer
+* [Hello World](./camel-hello-world/README.adoc) - CDI - Simple integration that print logs in the console using a timer
+
+* [Hello World HTTP](./camel-hello-world-http/README.adoc) - CDI - Simple demo the expose basic HTTP resources with observability.
+
+
 
 # Sources
 
