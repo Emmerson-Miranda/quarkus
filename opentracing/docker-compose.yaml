@@ -25,7 +25,17 @@ services:
       - "80:80"
     depends_on:
       - jaeger
+      - camel-hello-world-http
 
+  camel-hello-world-http:
+    image: emmerson/camel-hello-world-http:2.0.0
+    networks:
+      - opentracingnetwork
+    ports:
+      - "8080:8080"
+    depends_on:
+      - jaeger
+      
   upstream:
     image: emmerson/upstream:mockv2
     networks:
