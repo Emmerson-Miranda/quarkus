@@ -38,7 +38,7 @@ public class ObservabilityTest {
                 .then()
                 .statusCode(200)
                 .body(
-                        "'camel.context.status;camelContext=camel-quarkus-observability'", is(3));
+                        "'camel.context.status;camelContext=camel-hello-world-http'", is(3));
     }
 
     @Test
