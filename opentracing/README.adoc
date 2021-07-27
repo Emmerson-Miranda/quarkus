@@ -22,12 +22,15 @@ Open in your browser http://localhost:16686/search
 ----
 
 After generate the traffic you will the services in jaeger.
+
 image::./img/jaeger-services.png[width=50%,height=50%] 
 
 After choose the request you can see the trace.
+
 image::./img/nginx-camel.png[width=50%,height=50%] 
 
 Selecting an span you can see custom tags.
+
 image::./img/nginx-camel-tag.png[width=50%,height=50%] 
 
 
