@@ -10,9 +10,13 @@ TIP: Generate the image with build.sh in each folder.
 [source,shell]
 ----
 % curl -H "x-correlation-id: myIdGet" http://localhost/microservice/camel/greeting
-% curl -X POST -H "x-correlation-id: myIdPost" http://localhost/microservice/camel/greeting
+% curl -X POST  -d 'This is request payload' -H "x-correlation-id: myIdPost" http://localhost/microservice/camel/greeting
 % curl -H "x-correlation-id: myIdGetGoogle" http://localhost/microservice/camel/getgoogle
 ----
+
+== NGINX Configuration
+
+https://github.com/opentracing-contrib/nginx-opentracing/blob/master/doc/Reference.md
 
 == Trace visualization
 
@@ -21,19 +25,43 @@ TIP: Generate the image with build.sh in each folder.
 Open in your browser http://localhost:16686/search
 ----
 
-After generate the traffic you will the services in jaeger.
+Jaeger services and operations
 
-image::./img/jaeger-services.png[width=50%,height=50%] 
+image::./img/jaeger_nginx_operations.png[width=50%,height=50%] 
 
-After choose the request you can see the trace.
+image::./img/jaeger_camel_operations.png[width=50%,height=50%] 
 
-image::./img/nginx-camel.png[width=50%,height=50%] 
+Jaeger DAG
 
-Selecting an span you can see custom tags.
+image::./img/jaeger_dag.png[width=50%,height=50%] 
 
-image::./img/nginx-camel-tag.png[width=50%,height=50%] 
+Jaeger allow us compare requests
+
+image::./img/jaeger_comparing_requests.png[width=50%,height=50%] 
+
+Jaeger search
+
+image::./img/jaeger_search.png[width=50%,height=50%] 
+
+Jaeger detail views
+
+image::./img/getgoogle_detail.png[width=50%,height=50%] 
+
+image::./img/greeting_get_detail.png[width=50%,height=50%] 
+
+image::./img/greeting_post_detail.png[width=50%,height=50%] 
 
 
+
+
+[source,shell]
+----
+Open in your browser http://localhost:5601/app/kibana_overview#/
+----
+
+image::./img/jaeger_kibana.png[width=50%,height=50%] 
+
+image::./img/jaeger_kibana_discover.png[width=50%,height=50%] 
 
 
 == Docker compose output console

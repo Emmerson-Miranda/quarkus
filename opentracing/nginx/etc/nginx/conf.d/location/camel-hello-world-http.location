@@ -1,7 +1,8 @@
 location /microservice/camel {
     opentracing_operation_name $uri;
     opentracing_propagate_context;
-    opentracing_tag http_user_agent $http_user_agent;
+    
+    opentracing_tag myCorrelationId $http_x_correlation_id;
 
     access_log off;
     keepalive_timeout 120;
