@@ -2,6 +2,8 @@
 
 This PoC shows how Observability works in a microservices environment. This is a simple PoC where you will see how long is taking each request, detail about internal functionallity and logs across different servers. 
 
+image::./img/architecture.png[alt=architecture] 
+
 TIP: Generate the image with build.sh in each folder.
 
 
