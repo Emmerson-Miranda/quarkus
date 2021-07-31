@@ -114,7 +114,12 @@ $ ./target/*-runner
 ...
 [io.quarkus] (main) camel-quarkus-examples-... started in 0.013s. Listening on: http://0.0.0.0:8080
 ...
+$ ./mvnw package -Dnative -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true 
+
 ----
+
+
+See: https://quarkus.io/guides/maven-tooling
 
 
 == Jaeger views
