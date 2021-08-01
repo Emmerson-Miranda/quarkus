@@ -132,45 +132,6 @@ $ ./mvnw package -Dnative -Dquarkus.native.container-build=true -Dquarkus.contai
 See: https://quarkus.io/guides/maven-tooling
 
 
-== Jaeger views
-
-Below examples show a custom Tag (myCorrelationId) injected by camel code.
-
-=== Get google resource
-
-Search by id
-
-image::./img/getgoogle_0.png[width=50%,height=50%] 
-
-
-Request trace and spans view
-
-image::./img/getgoogle_1.png[width=50%,height=50%] 
-
-
-Span's detail
-
-image::./img/getgoogle_2_ok.png[width=50%,height=50%] 
-
-
-In case of error, you can see it in the span detail
-
-
-image::./img/getgoogle_2_error.png[width=50%,height=50%] 
-
-
-=== Greetings resource
-
-Another equest trace and spans view - In this case the resource use three camel routes internally
-
-image::./img/greetings_1.png[width=50%,height=50%] 
-
-
-Span's detail
-
-image::./img/greetings_2.png[width=50%,height=50%] 
-
-
 == Feedback
 
 Please report bugs and propose improvements via https://github.com/apache/camel-quarkus/issues[GitHub issues of Camel Quarkus] project.

@@ -1,0 +1,15 @@
+= Archetype: Quarkus-Camel-HTTP
+
+ Generate quarkus-camel projects with support for HTTP, metrics, health checks and distributed tracing.
+
+
+[source,shell]
+----
+% mvn archetype:generate -DarchetypeGroupId=edu.emmerson.camel.quarkus.archetype -DarchetypeArtifactId=camel-quarkus-http-archetype -DarchetypeVersion=1.0.0 -DartifactId=sample
+
+% cd sample
+
+sample % chmod +x mvnw
+
+sample % ./mvnw package -Dnative -Dquarkus.native.container-build=true -Dquarkus.container-image.build=true
+----
