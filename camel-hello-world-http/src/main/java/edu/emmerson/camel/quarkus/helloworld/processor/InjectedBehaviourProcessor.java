@@ -48,12 +48,12 @@ public class InjectedBehaviourProcessor implements Processor {
 
         if (uri != null && !"".equals(uri)) {
             String method = configReader.getValue("x-method", exchange, HttpGet.METHOD_NAME);
-            
-            log.info( String.format( "URI : %s, METHOD: %s", uri, method)  );
-            
+
+            log.info(String.format("URI : %s, METHOD: %s", uri, method));
+
             exchange.getIn().setHeader(Exchange.HTTP_URI, uri);
             exchange.getIn().setHeader(Exchange.HTTP_METHOD, method);
-            
+
         }
 
     }
