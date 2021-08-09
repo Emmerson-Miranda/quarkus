@@ -1,5 +1,6 @@
 package edu.emmerson.camel.quarkus.helloworld;
 
+import edu.emmerson.camel.quarkus.helloworld.processor.InjectedBehaviourProcessor;
 import org.apache.camel.builder.RouteBuilder;
 
 public class SomethingRoute extends RouteBuilder {
@@ -11,7 +12,7 @@ public class SomethingRoute extends RouteBuilder {
     public void configure() throws Exception {
         from(FROM)
                 .routeId(ROUTE_ID)
-                .delay(simple("${random(1000, 2000)}"))
+                .process(InjectedBehaviourProcessor.BEAN_NAME)
                 .log("Doing something with ${header.x-correlation-id}") //show up in opentracing logs
                 .setBody(constant("Hello World - doSomething"));
 

@@ -1,5 +1,6 @@
 package edu.emmerson.camel.quarkus.helloworld;
 
+import edu.emmerson.camel.quarkus.helloworld.processor.InjectedBehaviourProcessor;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
@@ -48,11 +49,20 @@ public class RESTRoutes extends RouteBuilder {
                 .route()
                 .routeId("getGoogle")
                 .process(new TagProcessor(TRACE_TAG_CORRELATION_ID_NAME, simple("${header.x-correlation-id}")))
+                .process(InjectedBehaviourProcessor.BEAN_NAME)
                 .log("Getting google home page")
                 .removeHeader(Exchange.HTTP_PATH)
-                //.setHeader(Exchange.HTTP_URI, constant("https://www.google.co.uk"))
-                //.setHeader(Exchange.HTTP_METHOD, constant(org.apache.camel.component.http.HttpMethods.GET))
                 .to("http://www.google.com?bridgeEndpoint=true")
+                .endRest();
+
+        rest("/callbackend")
+                .get()
+                .route()
+                .routeId("callBackend")
+                .process(new TagProcessor(TRACE_TAG_CORRELATION_ID_NAME, simple("${header.x-correlation-id}")))
+                .process(InjectedBehaviourProcessor.BEAN_NAME)
+                .log("Calling backend")
+                .to(BackendRoute.FROM)
                 .endRest();
 
     }
