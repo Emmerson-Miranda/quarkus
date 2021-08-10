@@ -51,7 +51,7 @@ To pick out specific metrics you can either use `grep` or the `https://stedolan.
 [source,shell]
 ----
 $ curl -s -H"Accept: application/json" localhost:8080/q/metrics/application \
-    | jq '.["camel.context.exchanges.completed.total;camelContext=camel-quarkus-observability"]'
+    | jq '.["camel.context.exchanges.completed.total;camelContext=camel-hello-world-http"]'
 ----
 
 === Health endpoint
