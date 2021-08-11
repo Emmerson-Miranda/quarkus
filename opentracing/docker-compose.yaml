@@ -70,25 +70,45 @@ services:
     depends_on:
       - jaeger
 
-  nginx:
-    image: docker.io/emmerson/nginx:jaeger
+#  nginx:
+#    image: docker.io/emmerson/nginx:jaeger
+#    networks:
+#      - opentracingnetwork
+#    ports:
+#      - "80:80"
+#    depends_on:
+#      - jaeger
+#      - camel-hello-world-http
+
+#  camel-hello-world-http:
+#    image: emmerson/camel-hello-world-http:2.0.0
+#    networks:
+#      - opentracingnetwork
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - jaeger
+
+  rabbitmq:
+    image: rabbitmq:3-management
     networks:
       - opentracingnetwork
     ports:
-      - "80:80"
-    depends_on:
-      - jaeger
-      - camel-hello-world-http
+      - "15672:15672"
+      - "5672:5672"
 
-  camel-hello-world-http:
-    image: emmerson/camel-hello-world-http:2.0.0
+  camel-rabbitmq-http:
+    image: emmerson/camel-rabbitmq-http:1.0.0
+    environment: 
+      - RABBIT_HOST=rabbitmq
     networks:
       - opentracingnetwork
     ports:
       - "8080:8080"
     depends_on:
       - jaeger
-      
+      - rabbitmq
+
   upstream:
     image: emmerson/upstream:mockv2
     networks:
