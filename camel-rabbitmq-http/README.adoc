@@ -22,8 +22,31 @@ HTTP call example
 
 [source,shell]
 ----
-% curl -d "param1=value1&param2=value2" -X POST  http://localhost:8080/publish
+
+% curl -d "param1=value1&param2=value2" -X POST  -H "x-correlation-id: myId12345" -H "x-uri: http://localhost:10003/microservice/myservice" -H "X-US-SCENARIO:200"  http://localhost:8080/publish
+
 ----
+
+
+
+ 
+== Before start the Microservice
+
+Start RabbitMQ
+
+[source,shell]
+----
+$ docker run --rm --hostname rabbitmqserver --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+----
+
+Start Upstream
+
+[source,shell]
+----
+$ docker run -p 10003:10003 -p 10443:10443 emmerson/upstream:mockv2
+----
+
+
 
  
 == Start in the Development mode

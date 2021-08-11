@@ -13,7 +13,7 @@ public class ProducerRouteBuilder extends RouteBuilder {
 
     public static final String ROUTE_ID = ProducerRouteBuilder.class.getName();
 
-    public static final String FROM = "direct:publishMessage";
+    public static final String FROM = "direct:publish-message";
 
     @Inject
     private ConfigReader configReader = new ConfigReader();

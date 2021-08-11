@@ -6,11 +6,9 @@ import edu.emmerson.camel.quarkus.rmq.processor.InjectedBehaviourProcessor;
 import edu.emmerson.camel.quarkus.rmq.util.ConfigReader;
 import edu.emmerson.camel.quarkus.rmq.util.MyIdempotentRepository;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.rabbitmq.RabbitMQConstants;
-
-import static org.apache.camel.Exchange.HTTP_METHOD;
-import static org.apache.camel.component.http.HttpMethods.POST;
 
 /**
  * 
@@ -22,7 +20,7 @@ import static org.apache.camel.component.http.HttpMethods.POST;
 public class ConsumerRouteBuilder extends RouteBuilder {
 
     public static final String ROUTE_ID = ConsumerRouteBuilder.class.getName();
-    public static final String FROM = "direct:target";
+    public static final String FROM = "direct:deliver-message-to-backend";
 
     public static final String RABBITMQ_ROUTING_KEY = "rabbit.consumer";
 
@@ -85,8 +83,9 @@ public class ConsumerRouteBuilder extends RouteBuilder {
                 .throttle(deliveryThrottle)
                 .log("Delivering: ${body}")
                 .process(InjectedBehaviourProcessor.BEAN_NAME)
-                .setHeader(HTTP_METHOD, constant(POST))
-                .to("http://oldhost")
+                .removeHeader(Exchange.HTTP_PATH)
+                .removeHeader(Exchange.HTTP_QUERY)
+                .to("http://backend")
                 .log("Message delivered to upstream: ${header.x-correlation-id}");
         ;
     }
