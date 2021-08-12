@@ -23,7 +23,11 @@ HTTP call example
 [source,shell]
 ----
 
-% curl -d "param1=value1&param2=value2" -X POST  -H "x-correlation-id: myId12345" -H "x-uri: http://localhost:10003/microservice/myservice" -H "X-US-SCENARIO:200"  http://localhost:8080/publish
+% curl -d "{\"msg\":\"can this be any value?\"}" -X POST -H "x-correlation-id: myId1" -H "x-uri: http://localhost:10003/microservice/myservice" -H "x-method: POST" -H "X-US-SCENARIO:200" -H "Content-Type: application/json" http://localhost:8080/publish
+
+% curl -d "{\"routeId\":\"edu.emmerson.camel.quarkus.rmq.route.ProducerRouteBuilder\", \"action\":\"restart\", \"restartDelay\":\"5000\"}" -X POST -H "Content-Type: application/json" http://localhost:8080/controlbus
+
+% curl -d "{\"routeId\":\"edu.emmerson.camel.quarkus.rmq.route.ConsumerRouteBuilder\", \"action\":\"restart\", \"restartDelay\":\"5000\"}" -X POST -H "Content-Type: application/json" http://localhost:8080/controlbus
 
 ----
 
@@ -53,7 +57,7 @@ $ docker run -p 10003:10003 -p 10443:10443 emmerson/upstream:mockv2
 
 [source,shell]
 ----
-$ mvn clean compile quarkus:dev
+$ mvn clean compile quarkus:dev -Dquarkus.jaeger.agent-host-port=localhost:6831
 ----
 
 The above command compiles the project, starts the application and lets the Quarkus tooling watch for changes in your

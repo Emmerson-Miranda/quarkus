@@ -11,9 +11,19 @@ TIP: Generate the image with build.sh in each folder.
 
 [source,shell]
 ----
-% curl -H "x-correlation-id: myIdGet" http://localhost/microservice/camel/greeting
-% curl -X POST  -d 'This is request payload' -H "x-correlation-id: myIdPost" http://localhost/microservice/camel/greeting
-% curl -H "x-correlation-id: myIdGetGoogle" http://localhost/microservice/camel/getgoogle
+% curl -H "x-correlation-id: myIdGet" http://localhost/hello-world/greeting
+% curl -X POST  -d 'This is request payload' -H "x-correlation-id: myIdPost" http://localhost/hello-world/greeting
+% curl -H "x-correlation-id: myIdGetGoogle" http://localhost/hello-world/getgoogle
+
+#happy path
+% curl -d "{\"msg\":\"can this be any value?\"}" -X POST  -H "x-correlation-id: myId1234" -H "x-uri: http://upstream:10003/microservice/myservice" -H "x-method: POST" -H "X-US-SCENARIO:200" -H "Content-Type: application/json"  http://localhost/gd/publish
+
+#backend does not exist
+% curl -d "{\"msg\":\"can this be any value?\"}" -X POST  -H "x-correlation-id: myId123" -H "x-uri: http://localhost:10003/microservice/myservice" -H "x-method: POST" -H "X-US-SCENARIO:200" -H "Content-Type: application/json"  http://localhost/gd/publish
+
+#controlbus
+% curl -d "{\"routeId\":\"edu.emmerson.camel.quarkus.rmq.route.ConsumerRouteBuilder\", \"action\":\"restart\", \"restartDelay\":\"5000\"}" -X POST -H "Content-Type: application/json" http://localhost/gd/controlbus
+
 ----
 
 == NGINX Configuration

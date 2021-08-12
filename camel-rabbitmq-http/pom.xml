@@ -99,6 +99,13 @@
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-lang3</artifactId>
 		</dependency>
+		
+
+		<dependency>
+		    <groupId>org.apache.camel.quarkus</groupId>
+		    <artifactId>camel-quarkus-controlbus</artifactId>
+		</dependency>
+
 
         <!-- test dependencies -->
         <dependency>

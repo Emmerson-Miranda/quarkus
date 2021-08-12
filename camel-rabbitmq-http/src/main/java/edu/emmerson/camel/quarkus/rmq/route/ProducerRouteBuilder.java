@@ -31,7 +31,6 @@ public class ProducerRouteBuilder extends RouteBuilder {
                     m.setHeader("custom.XcorrelationID", m.getHeader("x-correlation-id"));
                 })
                 .log("Message to be stored in RabbitMQ: ${body}")
-                .marshal().json()
                 .to(configReader.getPublisherQueueEndpoint());
     }
 
