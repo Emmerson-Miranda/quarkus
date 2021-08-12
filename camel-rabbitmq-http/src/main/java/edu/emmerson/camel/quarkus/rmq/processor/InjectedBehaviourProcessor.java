@@ -51,11 +51,11 @@ public class InjectedBehaviourProcessor implements Processor {
 
             log.info(String.format("URI : %s, METHOD: %s", uri, method));
 
+            exchange.getIn().setHeader(Exchange.HTTP_URL, uri); //shows backend URL in opentracing logs
             exchange.getIn().setHeader(Exchange.HTTP_URI, uri);
             exchange.getIn().setHeader(Exchange.HTTP_METHOD, method);
 
         }
-
     }
 
 }

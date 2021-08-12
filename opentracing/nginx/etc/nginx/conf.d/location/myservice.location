@@ -1,4 +1,4 @@
-location /microservice/myservice {
+location /myservice {
     opentracing_operation_name $uri;
     opentracing_propagate_context;
 

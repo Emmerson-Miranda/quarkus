@@ -1,4 +1,4 @@
-location /microservice/camel {
+location /hello-world {
     opentracing_operation_name $uri;
     opentracing_propagate_context;
     

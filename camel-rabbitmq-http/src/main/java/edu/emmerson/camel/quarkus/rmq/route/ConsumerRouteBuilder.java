@@ -70,6 +70,7 @@ public class ConsumerRouteBuilder extends RouteBuilder {
         //
         from(configReader.getConsumerQueueEndpoint())
                 .routeId(ROUTE_ID + "-rmq-consumer")
+                .log("Message from RabbitMQ: ${header.x-correlation-id}")
                 .idempotentConsumer(header("x-correlation-id"), myIdempotentRepository)
                 .to(FROM);
 

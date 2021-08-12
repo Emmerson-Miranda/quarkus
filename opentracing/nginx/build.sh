@@ -5,4 +5,4 @@ IMAGE_NAME=emmerson/nginx:jaeger
 docker build -t $IMAGE_NAME . --iidfile imageid.txt
 IMAGE_ID=$(cat imageid.txt)
 
-echo "Image ID: $IMAGE_ID"
+echo "$IMAGE_NAME Image ID: $IMAGE_ID"
