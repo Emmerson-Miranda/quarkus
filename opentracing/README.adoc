@@ -63,6 +63,17 @@ image::./img/greeting_get_detail.png[width=50%,height=50%]
 
 image::./img/greeting_post_detail.png[width=50%,height=50%] 
 
+image::./img/hello-world-greeting.png[width=50%,height=50%] 
+
+Guarantee Delivery with Rabbit MQ (publisher-consumer)
+
+image::./img/gd-publish.png[width=50%,height=50%] 
+
+image::./img/gd-publish-expand.png[width=50%,height=50%] 
+
+image::./img/gd-publish-error.png[width=50%,height=50%] 
+
+
 
 
 
