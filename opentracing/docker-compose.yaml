@@ -72,7 +72,9 @@ services:
  #     - jaeger
 
   camel-hello-world-http:
-    image: emmerson/camel-hello-world-http:2.0.0
+    image: emmerson/camel-hello-world-http:2.0.0-params
+    environment: 
+      - JAEGER_HOST=jaeger
     networks:
       - opentracingnetwork
     #ports:
@@ -89,9 +91,10 @@ services:
       - "5672:5672"
 
   camel-rabbitmq-http:
-    image: emmerson/camel-rabbitmq-http:1.0.0
+    image: emmerson/camel-rabbitmq-http:1.0.0-params
     environment: 
       - RABBIT_HOST=rabbitmq
+      - JAEGER_HOST=jaeger
     networks:
       - opentracingnetwork
     #ports:
