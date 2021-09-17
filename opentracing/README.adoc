@@ -26,6 +26,15 @@ TIP: Generate the image with build.sh in each folder.
 
 ----
 
+== Custom behaviour
+
+The two microservices accept some http headers to change their behaviour:
+x-delay - Delay the response the given amount of miliseconds.
+x-throw-error - The microserice will throw an exception on the http response
+x-uri - We can change the backend called by microservices 
+   (the backend where rabbitmq consumer will deliver the message)
+   (the backened called by /hello-world/callbackend)
+
 == NGINX Configuration
 
 https://github.com/opentracing-contrib/nginx-opentracing/blob/master/doc/Reference.md
