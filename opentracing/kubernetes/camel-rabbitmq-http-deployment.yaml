@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: camel-rabbitmq-http
+  name: camel-rabbitmq-http
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: camel-rabbitmq-http
+  template:
+    metadata:
+      labels:
+        app: camel-rabbitmq-http
+    spec:
+      containers:
+      - image: emmerson/camel-rabbitmq-http:1.0.0-params
+        name: camel-rabbitmq-http
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        env:
+          - name: RABBIT_HOST
+            value: rabbitmq
+          - name: JAEGER_HOST
+            value: jaeger

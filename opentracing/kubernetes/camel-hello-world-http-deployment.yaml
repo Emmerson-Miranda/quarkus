@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: camel-hello-world-http
+  name: camel-hello-world-http
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: camel-hello-world-http
+  template:
+    metadata:
+      labels:
+        app: camel-hello-world-http
+    spec:
+      containers:
+      - image: emmerson/camel-hello-world-http:2.0.0-params
+        name: camel-hello-world-http
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        env:
+          - name: JAEGER_HOST
+            value: jaeger

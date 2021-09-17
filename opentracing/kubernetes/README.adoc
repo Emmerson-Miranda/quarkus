@@ -1,0 +1,42 @@
+
+= Kubernetes deployment and test
+
+== Deploy 
+
+Run ./apply.sh script
+
+== Undeploy 
+
+Run ./delete.sh script
+
+== NGINX configuration 
+
+Change nginx-configs-cm.yaml to add more of fix nginx mappings
+
+== Jaeger configuration
+
+Change nginx-configs-cm.yaml to specify jaeger server for nginx
+
+Change JAEGER_HOST env var from camel-hello-world-http-deployment.yaml and camel-rabbitmq-http-deployment.yaml if needed.
+
+== Trafic generation
+
+[source,shell]
+----
+
+% PODNAME=$(kubectl get pods --selector=app=nginx --output=jsonpath={.items..metadata.name})
+
+% kubectl exec -it $PODNAME -- curl -H "x-correlation-id: myIdGet" http://localhost/hello-world/greeting
+
+
+% kubectl exec -it $PODNAME -- curl -X POST  -d 'This is request payload' -H "x-correlation-id: myIdPost" http://localhost/hello-world/greeting
+% kubectl exec -it $PODNAME -- curl -H "x-correlation-id: myIdGetGoogle" http://localhost/hello-world/getgoogle
+
+#happy path
+% kubectl exec -it $PODNAME -- curl -d "{\"msg\":\"can this be any value?\"}" -X POST  -H "x-correlation-id: myId1234" -H "x-uri: http://upstream:10003/microservice/myservice" -H "x-method: POST" -H "X-US-SCENARIO:200" -H "Content-Type: application/json"  http://localhost/gd/publish
+
+#backend does not exist
+% kubectl exec -it $PODNAME -- curl -d "{\"msg\":\"can this be any value?\"}" -X POST  -H "x-correlation-id: myId123" -H "x-uri: http://localhost:10003/microservice/myservice" -H "x-method: POST" -H "X-US-SCENARIO:200" -H "Content-Type: application/json"  http://localhost/gd/publish
+
+#controlbus
+% kubectl exec -it $PODNAME -- curl -d "{\"routeId\":\"edu.emmerson.camel.quarkus.rmq.route.ConsumerRouteBuilder\", \"action\":\"restart\", \"restartDelay\":\"5000\"}" -X POST -H "Content-Type: application/json" http://localhost/gd/controlbus

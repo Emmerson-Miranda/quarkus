@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: upstream
+  name: upstream
+spec:
+  ports:
+  - name: tcpport-1
+    port: 10003
+    protocol: TCP
+    targetPort: 10003
+  - name: tcpport-2
+    port: 10443
+    protocol: TCP
+    targetPort: 10443
+  selector:
+    app: upstream

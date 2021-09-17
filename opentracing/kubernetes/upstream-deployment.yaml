@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: upstream
+  name: upstream
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: upstream
+  template:
+    metadata:
+      labels:
+        app: upstream
+    spec:
+      containers:
+      - image: emmerson/upstream:mockv2
+        name: upstream
+        ports:
+        - containerPort: 10003
+          protocol: TCP
+        - containerPort: 10443
+          protocol: TCP

@@ -1,0 +1,71 @@
+apiVersion: v1
+data:
+  camel-hello-world-http.location:  |
+    location /hello-world {
+      opentracing_operation_name $uri;
+      opentracing_propagate_context;
+      
+      opentracing_tag myCorrelationId $http_x_correlation_id;
+  
+      access_log off;
+      keepalive_timeout 120;
+      send_timeout 30;
+  
+      proxy_http_version 1.1; 
+      proxy_pass http://camel-hello-world-http:8080/; 
+    }
+
+  camel-rabbitmq-http.location:  |
+    location /gd {
+      opentracing_operation_name $uri;
+      opentracing_propagate_context;
+      
+      opentracing_tag myCorrelationId $http_x_correlation_id;
+   
+      access_log off;
+      keepalive_timeout 120;
+      send_timeout 30;
+   
+      proxy_http_version 1.1; 
+      proxy_pass http://camel-rabbitmq-http:8080/; 
+    }
+
+  myservice.location:  |
+    location /myservice {
+      opentracing_operation_name $uri;
+      opentracing_propagate_context;
+  
+      opentracing_tag myCorrelationId $http_x_correlation_id;
+  
+      access_log off;
+      keepalive_timeout 120;
+      send_timeout 30;
+  
+      proxy_http_version 1.1; 
+      proxy_pass http://upstream:10003/microservice/myservice; 
+    }
+
+  jaeger-nginx-config.json:  |
+    {
+      "service_name": "nginx",
+      "sampler": {
+        "type": "const",
+        "param": 1
+      },
+      "reporter": {
+        "localAgentHostPort": "jaeger:6831"
+      },
+      "headers": {
+        "jaegerDebugHeader": "jaeger-debug-id",
+        "jaegerBaggageHeader": "jaeger-baggage",
+        "traceBaggageHeaderPrefix": "uberctx-"
+      },
+      "baggage_restrictions": {
+        "denyBaggageOnInitializationFailure": false,
+        "hostPort": ""
+      }
+    }
+    
+kind: ConfigMap
+metadata:
+  name: nginx-configs
