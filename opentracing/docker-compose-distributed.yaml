@@ -1,0 +1,131 @@
+#docker-compose up --remove-orphans --force-recreate
+version: '3.7'
+services:
+
+  #https://www.elastic.co/guide/en/elastic-stack-get-started/current/get-started-docker.html
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
+    container_name: es01
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      #- discovery.seed_hosts=es02,es03
+      #- cluster.initial_master_nodes=es01,es02,es03
+      - cluster.initial_master_nodes=es01
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - otnet
+
+  kib01:
+    image: docker.elastic.co/kibana/kibana:7.13.4
+    container_name: kib01
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://es01:9200
+      #ELASTICSEARCH_HOSTS: '["http://es01:9200","http://es02:9200","http://es03:9200"]'
+      ELASTICSEARCH_HOSTS: '["http://es01:9200"]'
+    networks:
+      - otnet
+    depends_on:
+      - es01
+
+  jaeger:
+    #https://www.jaegertracing.io/docs/1.24/getting-started/
+    image: jaegertracing/all-in-one:1.24
+    networks:
+      - otnet
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+      - "9411:9411"
+    environment: 
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+      # https://logz-io.cdn.ampproject.org/v/s/logz.io/blog/jaeger-and-the-elk-stack/amp/?amp_js_v=a6&amp_gsa=1&usqp=mq331AQKKAFQArABIIACAw%3D%3D#aoh=16273919765246&csi=1&referrer=https%3A%2F%2Fwww.google.com&amp_tf=From%20%251%24s&ampshare=https%3A%2F%2Flogz.io%2Fblog%2Fjaeger-and-the-elk-stack%2F
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - ES_SERVER_URLS=http://es01:9200
+      - ES_TAGS_AS_FIELDS_ALL=true
+    depends_on:
+      - es01
+    restart: on-failure
+
+
+  camel-hello-world-http:
+    image: emmerson/camel-hello-world-http:2.0.0-params
+    environment: 
+      - JAEGER_HOST=jaeger
+    networks:
+      - otnet
+    #ports:
+    #  - "8080:8080"
+    depends_on:
+      - jaeger
+    restart: on-failure
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    networks:
+      - otnet
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  camel-rabbitmq-http:
+    image: emmerson/camel-rabbitmq-http:1.0.0-params
+    environment: 
+      - RABBIT_HOST=rabbitmq
+      - JAEGER_HOST=jaeger
+    networks:
+      - otnet
+    #ports:
+    #  - "8080:8080"
+    depends_on:
+      - jaeger
+      - rabbitmq
+
+  upstream:
+    image: upstream:mockv2-opentracing
+    networks:
+      - otnet
+    ports:
+      - "10003:10003"
+      - "10443:10443"
+
+  nginx:
+    image: docker.io/emmerson/nginx:jaeger
+    networks:
+      - otnet
+    ports:
+      - "80:80"
+    depends_on:
+      - jaeger
+      - camel-rabbitmq-http
+      - camel-hello-world-http
+    restart: on-failure
+
+volumes:
+  data01:
+    driver: local
+  data02:
+    driver: local
+  data03:
+    driver: local
+
+networks:
+  otnet: 
+    driver: bridge
+
