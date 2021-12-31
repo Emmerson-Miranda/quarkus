@@ -25,6 +25,79 @@ services:
     networks:
       - otnet
 
+  jaeger-collector:
+    #https://www.jaegertracing.io/docs/1.29/deployment/
+    image: jaegertracing/jaeger-collector:1.29
+    container_name: jaeger-collector
+    networks:
+      - otnet
+    ports:
+      - "14269:14269"
+      - "14268:14268"
+      - "14250:14250"
+      - "9411:9411"
+    environment: 
+      #- COLLECTOR_ZIPKIN_HTTP_PORT=9411
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - ES_SERVER_URLS=http://es01:9200
+      #- ES_TAGS_AS_FIELDS_ALL=true
+    depends_on:
+      - es01
+    restart: on-failure
+
+
+  jaeger-agent-dmz:
+    #https://www.jaegertracing.io/docs/1.29/deployment/
+    image: jaegertracing/jaeger-agent:1.29
+    command: ["--reporter.grpc.host-port=jaeger-collector:14250", "--agent.tags=environment=poc,layer=dmz"]
+    container_name: jaeger-agent-dmz
+    networks:
+      - otnet
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+    depends_on:
+      - jaeger-collector
+    restart: on-failure
+
+  jaeger-agent-mz:
+    #https://www.jaegertracing.io/docs/1.29/deployment/
+    image: jaegertracing/jaeger-agent:1.29
+    container_name: jaeger-agent-mz
+    networks:
+      - otnet
+    ports:
+      - "15775:5775/udp"
+      - "16831:6831/udp"
+      - "16832:6832/udp"
+      - "15778:5778"
+    command: 
+      - "--reporter.grpc.host-port=jaeger-collector:14250"
+      - "--agent.tags=environment=poc,layer=mz"
+    depends_on:
+      - jaeger-collector
+    restart: on-failure
+
+  jaeger-query:
+    #https://www.jaegertracing.io/docs/1.29/deployment/
+    image: jaegertracing/jaeger-query:1.29
+    container_name: jaeger-query
+    networks:
+      - otnet
+    ports:
+      - "16685:16685"
+      - "16686:16686"
+      - "16687:16687"
+    environment: 
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - ES_SERVER_URLS=http://es01:9200
+    depends_on:
+      - es01
+    restart: on-failure
+
+
   kib01:
     image: docker.elastic.co/kibana/kibana:7.13.4
     container_name: kib01
@@ -39,45 +112,23 @@ services:
     depends_on:
       - es01
 
-  jaeger:
-    #https://www.jaegertracing.io/docs/1.24/getting-started/
-    image: jaegertracing/all-in-one:1.24
-    networks:
-      - otnet
-    ports:
-      - "5775:5775/udp"
-      - "6831:6831/udp"
-      - "6832:6832/udp"
-      - "5778:5778"
-      - "16686:16686"
-      - "14268:14268"
-      - "14250:14250"
-      - "9411:9411"
-    environment: 
-      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
-      # https://logz-io.cdn.ampproject.org/v/s/logz.io/blog/jaeger-and-the-elk-stack/amp/?amp_js_v=a6&amp_gsa=1&usqp=mq331AQKKAFQArABIIACAw%3D%3D#aoh=16273919765246&csi=1&referrer=https%3A%2F%2Fwww.google.com&amp_tf=From%20%251%24s&ampshare=https%3A%2F%2Flogz.io%2Fblog%2Fjaeger-and-the-elk-stack%2F
-      - SPAN_STORAGE_TYPE=elasticsearch
-      - ES_SERVER_URLS=http://es01:9200
-      - ES_TAGS_AS_FIELDS_ALL=true
-    depends_on:
-      - es01
-    restart: on-failure
-
 
   camel-hello-world-http:
     image: emmerson/camel-hello-world-http:2.0.0-params
+    container_name: camel-hello-world-http
     environment: 
-      - JAEGER_HOST=jaeger
+      - JAEGER_HOST=jaeger-agent-mz
     networks:
       - otnet
     #ports:
     #  - "8080:8080"
     depends_on:
-      - jaeger
+      - jaeger-agent-mz
     restart: on-failure
 
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: rabbitmq
     networks:
       - otnet
     ports:
@@ -86,19 +137,21 @@ services:
 
   camel-rabbitmq-http:
     image: emmerson/camel-rabbitmq-http:1.0.0-params
+    container_name: camel-rabbitmq-http
     environment: 
       - RABBIT_HOST=rabbitmq
-      - JAEGER_HOST=jaeger
+      - JAEGER_HOST=jaeger-agent-mz
     networks:
       - otnet
     #ports:
     #  - "8080:8080"
     depends_on:
-      - jaeger
+      - jaeger-agent-mz
       - rabbitmq
 
   upstream:
     image: upstream:mockv2-opentracing
+    container_name: upstream
     networks:
       - otnet
     ports:
@@ -107,15 +160,21 @@ services:
 
   nginx:
     image: docker.io/emmerson/nginx:jaeger
+    container_name: nginx
     networks:
       - otnet
     ports:
       - "80:80"
+    volumes:
+      - "./nginx/etc/jaeger-nginx-config.json:/etc/jaeger-nginx-config.json"
     depends_on:
-      - jaeger
+      - jaeger-agent-dmz
       - camel-rabbitmq-http
       - camel-hello-world-http
     restart: on-failure
+
+
+
 
 volumes:
   data01:

@@ -5,7 +5,7 @@
       "param": 1
     },
     "reporter": {
-      "localAgentHostPort": "jaeger:6831"
+      "localAgentHostPort": "jaeger-agent-dmz:6831"
     },
     "headers": {
       "jaegerDebugHeader": "jaeger-debug-id",
